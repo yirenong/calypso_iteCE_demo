@@ -82,9 +82,6 @@
       <div class="logo-container">
         <img :class="{ 'collapsed-logo': !isExpanded, 'expanded-logo': isExpanded }" src="@/assets/cavill_logo.png"
           alt="Cavill Logo" class="logo-image">
-        <img :class="{ 'collapsed-logo': !isExpanded, 'expanded-logo': isExpanded, 'willowglen-logo': true }"
-          src="@/assets/willowglen_logo.jpg" alt="Willowglen Logo" class="logo-image">
-
       </div>
 
 
@@ -609,28 +606,6 @@ toggleUserDropdown() {
   left: 50%;
   transform: translateX(-50%);
   width: auto;
-}
-
-/* Style for the Willowglen logo to make it bigger */
-.willowglen-logo {
-  width: 100px;
-  /* Increase size as needed */
-  max-width: 100px;
-  /* Adjust maximum size as needed */
-  height: auto;
-  transition: all 0.3s ease;
-}
-
-/* When sidebar is collapsed */
-.sidebar:not(.expanded) .willowglen-logo {
-  width: 55px;
-  /* Adjust size when collapsed */
-}
-
-/* When sidebar is expanded */
-.sidebar.expanded .willowglen-logo {
-  width: 100px;
-  /* Adjust size when expanded */
 }
 
 .user-dropdown-container {
