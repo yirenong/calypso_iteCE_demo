@@ -19,7 +19,7 @@
                 </div>
                 <div class="female-counter-box mt-4">
                   <h5>Water Flow Measurement</h5>
-                  <p>-</p>
+                  <p>{{ chartData[chartData.length - 1].toFixed(2) }} m³</p>
                 </div>
               </div>
             </div>
@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import mqtt from 'mqtt';
 import axios from 'axios';
 import peopleCounterIcon from '@/assets/peopleCounter.png';
 import odorIcon from '@/assets/Odor.png';
@@ -163,42 +162,6 @@ export default {
     };
   },
   methods: {
-    setupPeopleMqtt() {
-      // Connect to the MQTT broker on port 1883
-      this.peopleMqttClient = mqtt.connect('ws://152.42.161.80:9001');
-
-      this.peopleMqttClient.on('connect', () => {
-        console.log('Connected to MQTT broker for People data');
-        this.peopleMqttClient.subscribe('toilet/people/data', (err) => {
-          if (err) {
-            console.error('Error subscribing to topic: toilet/people/data', err);
-          } else {
-            console.log('Subscribed to topic: toilet/people/data');
-          }
-        });
-      });
-
-      this.peopleMqttClient.on('message', (topic, message) => {
-        if (topic === 'toilet/people/data') {
-          try {
-            const data = JSON.parse(message.toString());
-            // Map devEUI to icon index as in your REST function.
-            const mapping = {
-              "24e124716d496395": 0,
-              "24e124716d496118": 1
-            };
-            const index = mapping[data.devEUI];
-            if (index !== undefined) {
-              // Call updateCounterData with the MQTT data.
-              this.updateCounterData(index, data);
-            }
-          } catch (error) {
-            console.error('Error parsing MQTT message for People data:', error);
-          }
-        }
-      });
-    },
-
     updateWaterMeterData(dailyUsage) {
       const waterMeterIcon = this.icons.find(icon => icon.type === 'Water Meter');
       if (waterMeterIcon) {
@@ -577,20 +540,8 @@ export default {
     }
   },
   mounted() {
-    // Fetch People data from the People API every 5 seconds.
-    this.fetchPeopleData();
-    this.setupPeopleMqtt();
-    // setInterval(this.fetchPeopleData, 5000);
-    // Other initial data fetches:
-    this.fetchData();
+    // Demo mode: render only the hardcoded data declared above.
     this.generateChart();
-    // Keep the fixed demo chart; live history would overwrite it with empty readings.
-    this.fetchOdorData();
-  },
-  beforeUnmount() {
-    if (this.peopleMqttClient) {
-      this.peopleMqttClient.end();
-    }
   },
 
 };
